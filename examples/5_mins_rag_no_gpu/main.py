@@ -98,7 +98,7 @@ def document_loader():
 
 # Response Generation and Chat
 def response_generation_and_chat():
-    st.subheader("Chat with your AI Assistant, Doc'er!")
+    st.subheader("Chat with your AI Assistant, Envie!")
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -107,9 +107,9 @@ def response_generation_and_chat():
             st.markdown(message["content"])
 
     prompt_template = ChatPromptTemplate.from_messages(
-        [("system", "You are a helpful AI assistant named Doc'er. You will reply to questions only based on the context that you are provided. If something is out of context, you will refrain from replying and politely decline to respond to the user. You are not the person in the given context"), ("user", "{input}")]
+        [("system", "You are a helpful AI assistant named Envie. You will reply to questions only based on the context that you are provided. If something is out of context, you will refrain from replying and politely decline to respond to the user."), ("user", "{input}")]
     )
-    user_input = st.chat_input("Can you tell me about the doc?")
+    user_input = st.chat_input("Can you tell me what NVIDIA is known for?")
 
     chain = prompt_template | llm | StrOutputParser()
 
