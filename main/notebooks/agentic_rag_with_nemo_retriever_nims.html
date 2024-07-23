@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentic RAG pipeline with Nemo Retriever and LLM NIMs &mdash; NVIDIA Generative AI Examples 24.6.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/omni-style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/version.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architecture" href="../architecture.html" />
+    <link rel="prev" title="Build a RAG using a locally hosted NIM" href="08_RAG_Langchain_with_Local_NIM.html" />
+ 
+
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+<a href="../index.html">
+  <img src="../_static/nvidia-logo-white.png" class="logo" alt="Logo"/>
+</a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">RAG Pipelines for Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">About the RAG Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support-matrix.html">Support Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-catalog.html">API Catalog Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query-decomposition.html">Query Decomposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structured-data.html">Structured Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal-data.html">Multimodal Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multi-turn.html">Multi-turn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../using-sample-web-application.html">Sample Chat Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vector-database.html">Alternative Vector Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nim-llms.html">NIM for LLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-examples.html">Developing Simple Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tools/evaluation/index.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observability.html">Observability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_dataloader.html">Press Release Chat Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_Option%281%29_NVIDIA_AI_endpoint_simple.html">NVIDIA API Catalog with LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_Option%282%29_minimalistic_RAG_with_langchain_local_HF_LLM.html">LangChain with Local Llama 2 Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Option%281%29_llama_index_with_NVIDIA_AI_endpoint.html">NVIDIA API Catalog, LlamaIndex, and LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Option%282%29_llama_index_with_HF_local_LLM.html">HF Checkpoints with LlamaIndex and LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Agent_use_tools_leveraging_NVIDIA_AI_endpoints.html">Multimodal Models from NVIDIA AI Catelog and AI Catalog with LangChain Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_RAG_for_HTML_docs_with_Langchain_NVIDIA_AI_Endpoints.html">Build a RAG chain by generating embeddings for NVIDIA Triton documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_LangGraph_HandlingAgent_IntermediateSteps.html">LangGraph Handling LangChain Agent Intermediate_Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_Chat_with_nvidia_financial_reports.html">Notebook: Chatting with NVIDIA Financial Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_RAG_Langchain_with_Local_NIM.html">Build a RAG using a locally hosted NIM</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agentic RAG pipeline with Nemo Retriever and LLM NIMs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend.html">RAG Playground Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jupyter-server.html">Jupyter Notebook Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chain-server.html">Chain Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Software Component Configuration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NVIDIA Generative AI Examples</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Agentic RAG pipeline with Nemo Retriever and LLM NIMs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="agentic-rag-pipeline-with-nemo-retriever-and-llm-nims">
+<h1>Agentic RAG pipeline with Nemo Retriever and LLM NIMs<a class="headerlink" href="#agentic-rag-pipeline-with-nemo-retriever-and-llm-nims" title="Permalink to this headline"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h2>
+<p>Retrieval-augmented generation (RAG) has proven to be an effective strategy for ensuring large language model (LLM) responses are up-to-date and not hallucinated.</p>
+<p>Various retrieval strategies have been proposed that can improve the recall of documents for generation. There is no one-size-fits-all all. The strategy (for example: chunk size, number of documents returned, semantic search vs graph retrieval, etc.) depends on your data.  Although the retrieval strategies might differ, an agentic framework designed on top of your retrieval system that does reasoning, decision-making, and reflection on your retrieved data is becoming more common in modern RAG systems.  An agent can be described as a system that can use an LLM to reason through a problem, create a plan to solve the problem, and execute the plan with the help of a set of tools.  For example, LLMs are notoriously bad at solving math problems, giving an LLM a calculator “tool” that it can use to perform mathematical tasks while it reasons through a larger problem of calculating YoY increase of a company’s revenue can be described as an agentic workflow.</p>
+<p>As generative AI systems start transitioning towards entities capable of performing “agentic” tasks, we need robust models that have been trained on the ability to break down tasks, act as central planners, and have multi-step reasoning capabilities with model and system-level safety checks. With the Llama 3.1 family, Meta is launching a suite of LLMs spanning  8B, 70B, and 405B parameters with these tool-calling capabilities for agentic workloads. NVIDIA has partnered with Meta to make sure the latest Llama models can be deployed optimally through NVIDIA NIMs.</p>
+<p>Further, with the general availability of the NVIDIA NeMo Retriever collection of NIM microservices, enterprises have access to scalable software to customize their data-dependent RAG pipelines. The NeMo Retriever NIMs can be easily plugged into existing RAG pipelines and interfaces with open source LLM frameworks like LangChain or LlamaIndex, so you can easily integrate retriever models into generative AI applications.</p>
+<section id="setup-the-environment">
+<h3>Setup the Environment<a class="headerlink" href="#setup-the-environment" title="Permalink to this headline"></a></h3>
+<p>First, let’s install a few packages for interfacing with NVIDIA embedding, raranking, LLM models and vector databases.</p>
+<p>Install the following system dependencies if they are not already available on your system with e.g. <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span></code> for Mac. Depending on what document types you’re parsing, you may not need all of these.</p>
+<ul class="simple">
+<li><p>poppler-utils (images and PDFs)</p></li>
+<li><p>tesseract-ocr(images and PDFs)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>langchain_community<span class="w"> </span>unstructured<span class="o">[</span>all-docs<span class="o">]</span><span class="w"> </span>langchain-nvidia-ai-endpoints<span class="w"> </span>langchainhub<span class="w"> </span>faiss-gpu<span class="w"> </span>langchain<span class="w"> </span>langgraph<span class="w"> </span>pandas<span class="w"> </span>rank_bm25
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nemo-retriever-nims">
+<h3>NeMo Retriever NIMs<a class="headerlink" href="#nemo-retriever-nims" title="Permalink to this headline"></a></h3>
+<p>NeMo Retriever microservices can be used for embedding and reranking. These microservices can be deployed within the enterprise locally, and are packaged together with <a href="https://developer.nvidia.com/triton-inference-server">NVIDIA Triton Inference Server</a> and <a href="https://developer.nvidia.com/tensorrt">NVIDIA TensorRT</a> for optimized inference of text for embedding and reranking.  Additional enterprise benefits include:</p>
+<p><strong>Scalable deployment</strong>: Whether you’re catering to a few users or millions, NeMo Retriever embedding and reranking NIMs can be scaled seamlessly to meet your demands.</p>
+<p><strong>Flexible integration</strong>: Easily incorporate NeMo Retriever embedding and reranking NIMs into existing workflows and applications, thanks to the OpenAI-compliant API endpoints–and deploy anywhere your data resides.</p>
+<p><strong>Secure processing</strong>: Your data privacy is paramount. NeMo Retriever embedding and reranking NIMs ensure that all inferences are processed securely, with rigorous data.</p>
+<p>NeMo Retriever <a href="https://docs.nvidia.com/nim/nemo-retriever/text-embedding/latest/overview.html">embedding</a> and <a href="https://docs.nvidia.com/nim/nemo-retriever/text-reranking/latest/overview.html">reranking</a> NIM microservices are available today.  Developers can download and deploy docker containers locally.</p>
+<section id="access-the-llama-3-1-405b-model">
+<h4>Access the Llama 3.1 405B model<a class="headerlink" href="#access-the-llama-3-1-405b-model" title="Permalink to this headline"></a></h4>
+<p>The new Llama 3.1 set of models can be seen as the first big push of open-source models towards serious agentic capabilities. These models can now become part of a larger automation system, with LLMs doing the planning and picking the right tools to solve a larger problem. Since NVIDIA Llama 3.1 NIMs have the necessary support for OpenAI style tool calling, libraries like LangChain can now be used with NIMs to bind LLMs to Pydantic classes and fill in objects/dictionaries. This combination makes it easier for developers to get structured outputs from NIM LLMs without having to resort to regex parsing. You can access Llama 3.1 405B at ai.nvidia.com. Follow <a href="https://nvidia.github.io/GenerativeAIExamples/latest/api-catalog.html#get-an-api-key-for-the-accessing-models-on-the-api-catalog">these</a> instructions to generate the API key</p>
+</section>
+</section>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline"></a></h3>
+<p>Retrieving passages or documents within a RAG pipeline without further validation and self-reflection can usually result in unhelpful responses and factual inaccuracies. Additionally, since the models aren’t explicitly trained to follow facts from passages, post-generation verification is necessary.</p>
+<p>Multi-agent frameworks, like LangGraph, enable developers to group LLM application-level logic into nodes and edges, for finer levels of control over agentic decision-making. LangGraph with NVIDIA LangChain OSS connectors can be used for embedding, reranking, and implementing the necessary agentic RAG techniques with LLMs (as discussed previously).</p>
+<p>To implement this, an application developer must include the finer-level decision-making on top of their RAG pipeline. Figure below shows one of the many renditions on a router node depending on the use case. Here, the router takes a decision to rewrite the query with help on an LLM, perchance of better recall from the retrieve.</p>
+<p><img alt="alt text" src="notebooks/agentic_rag.png" /></p>
+<p><strong>Query decomposer</strong>: Breaks down the question into multiple smaller logical questions, and is helpful when a question needs to be answered using chunks from multiple documents.</p>
+<p><strong>Router</strong>: Decides if chunks need to be retrieved from the local retriever to answer the given question based on the relevancy of documents stored locally. Alternatively, ‌the agent can be programmed to do a web search or simply answer with an ‘I don’t know.’</p>
+<p><strong>Retriever</strong>: This is the internal implementation of the RAG pipeline. For example, a hybrid retriever of a semantic and keyword search retriever.</p>
+<p><strong>Grader</strong>: Checks if the retrieved passages/chunks are relevant to the question at hand.</p>
+<p><strong>Hallucination checker</strong>: Checks if the LLM generation from each chunk is relevant to the chunk.  Post-generation verification is necessary since the models are not explicitly trained to follow facts from passages.</p>
+</section>
+<section id="download-the-dataset">
+<h3>Download the dataset<a class="headerlink" href="#download-the-dataset" title="Permalink to this headline"></a></h3>
+<p>Let’s download the NIH clinical studies datasets from docugami repository. It cont</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget<span class="w"> </span>https://raw.githubusercontent.com/docugami/KG-RAG-datasets/main/nih-clinical-trial-protocols/download.csv
+<span class="o">!</span>wget<span class="w"> </span>https://raw.githubusercontent.com/docugami/KG-RAG-datasets/main/nih-clinical-trial-protocols/download.py
+<span class="o">!</span>python<span class="w"> </span>download.py
+</pre></div>
+</div>
+</div>
+</div>
+<section id="step-1-load-and-chunk-the-dataset">
+<h4>Step-1: Load and chunk the dataset<a class="headerlink" href="#step-1-load-and-chunk-the-dataset" title="Permalink to this headline"></a></h4>
+<p>Use Langchain dataloaders to load all the PDF files in the created directory and split them into chunks of 500 characters each</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langchain.text_splitter</span> <span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+<span class="kn">from</span> <span class="nn">langchain_community.document_loaders</span> <span class="kn">import</span> <span class="n">DirectoryLoader</span>
+<span class="kn">from</span> <span class="nn">langchain_nvidia_ai_endpoints</span> <span class="kn">import</span> <span class="n">ChatNVIDIA</span>
+
+<span class="n">loader</span> <span class="o">=</span> <span class="n">DirectoryLoader</span><span class="p">(</span><span class="s1">&#39;./docs&#39;</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="s2">&quot;**/*.pdf&quot;</span><span class="p">)</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">docs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text_splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+<span class="n">doc_splits</span> <span class="o">=</span> <span class="n">text_splitter</span><span class="o">.</span><span class="n">split_documents</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-initialize-the-embedding-reranking-and-llm-connectors">
+<h3>Step-2: Initialize the Embedding, Reranking and LLM connectors<a class="headerlink" href="#step-2-initialize-the-embedding-reranking-and-llm-connectors" title="Permalink to this headline"></a></h3>
+<section id="embedding-and-reranking-nim">
+<h4>Embedding and Reranking NIM<a class="headerlink" href="#embedding-and-reranking-nim" title="Permalink to this headline"></a></h4>
+<p>Use the NVIDIA OSS connectors to langchain to initialize the embedding, reranking and LLM models, after setting up the embedding and reranking NIMs locally using instructions <a href="https://docs.nvidia.com/nim/nemo-retriever/text-embedding/latest/overview.html">here</a> and <a href="https://docs.nvidia.com/nim/nemo-retriever/text-reranking/latest/overview.html">here</a>. point the <code class="docutils literal notranslate"><span class="pre">base_url</span></code> below to the ip address for your local machine.</p>
+</section>
+<section id="llama-3-1-405b-llm">
+<h4>Llama 3.1 405B LLM<a class="headerlink" href="#llama-3-1-405b-llm" title="Permalink to this headline"></a></h4>
+<p>The latest Llama 3.1 405B model is hosted on ai.nvidia.com. Use the instruction <a href="https://nvidia.github.io/GenerativeAIExamples/latest/api-catalog.html#get-an-api-key-for-the-accessing-models-on-the-api-catalog">here</a> to obtain the API Key for access</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langchain_nvidia_ai_endpoints</span> <span class="kn">import</span> <span class="n">NVIDIAEmbeddings</span><span class="p">,</span> <span class="n">NVIDIARerank</span>
+<span class="kn">from</span> <span class="nn">langchain_openai</span> <span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span> <span class="nn">langchain_core.prompts</span> <span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+
+<span class="c1"># connect to an embedding NIM running at localhost:8080</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">NVIDIAEmbeddings</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://&lt;REPLACE_WITH_LOCAL_MACHINE_IP&gt;:8000/v1&quot;</span><span class="p">,</span> 
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;nvidia/nv-embedqa-e5-v5&quot;</span><span class="p">,</span>
+    <span class="n">truncate</span><span class="o">=</span><span class="s2">&quot;END&quot;</span>
+<span class="p">)</span>
+
+<span class="n">reranker</span> <span class="o">=</span> <span class="n">NVIDIARerank</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://&lt;REPLACE_WITH_LOCAL_MACHINE_IP&gt;:8000/v1&quot;</span><span class="p">,</span> 
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;nvidia/nv-rerankqa-mistral-4b-v3&quot;</span><span class="p">,</span>
+    <span class="n">truncate</span><span class="o">=</span><span class="s2">&quot;END&quot;</span>
+<span class="p">)</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://integrate.api.nvidia.com/v1&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;&lt;REPLACE_WITH_GENERATED_API_KEY&gt;&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;meta/llama-3.1-405b-instruct&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-create-a-hybrid-search-retriever">
+<h4>Step-3: Create a hybrid search retriever<a class="headerlink" href="#step-3-create-a-hybrid-search-retriever" title="Permalink to this headline"></a></h4>
+<p>Load the documents into a keyword search store and semantic search FAISS vector database. We create a weighted hybrid of a keyword and semantic search for better retrieval recall, and a higher score is given to the keyword search retriever because of domain specific medical jargon.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langchain.retrievers</span> <span class="kn">import</span> <span class="n">EnsembleRetriever</span>
+<span class="kn">from</span> <span class="nn">langchain_community.retrievers</span> <span class="kn">import</span> <span class="n">BM25Retriever</span>
+<span class="kn">from</span> <span class="nn">langchain_community.vectorstores</span> <span class="kn">import</span> <span class="n">FAISS</span>
+
+<span class="n">bm25_retriever</span> <span class="o">=</span> <span class="n">BM25Retriever</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">doc_splits</span><span class="p">)</span>
+<span class="n">faiss_vectorstore</span> <span class="o">=</span> <span class="n">FAISS</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">doc_splits</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+
+<span class="n">faiss_retriever</span> <span class="o">=</span> <span class="n">faiss_vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+<span class="n">hybrid_retriever</span> <span class="o">=</span> <span class="n">EnsembleRetriever</span><span class="p">(</span>
+    <span class="n">retrievers</span><span class="o">=</span><span class="p">[</span><span class="n">bm25_retriever</span><span class="p">,</span> <span class="n">faiss_retriever</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;How does Get It Right First Time (GIRFT) Urology programme relate to TURBT and URS?&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-query-decompostion-with-structured-generation">
+<h4>Step-4: Query decompostion with structured generation<a class="headerlink" href="#step-4-query-decompostion-with-structured-generation" title="Permalink to this headline"></a></h4>
+<p>The new Llama 3.1 set of models can be seen as the first big push of open-source models towards serious agentic capabilities. These models can now become part of a larger automation system, with LLMs doing the planning and picking the right tools to solve a larger problem. Since NVIDIA Llama 3.1 NIMs have the necessary support for OpenAI style tool calling, libraries like LangChain can now be used with NIMs to bind LLMs to Pydantic classes and fill in objects/dictionaries. This combination makes it easier for developers to get structured outputs from NIM LLMs without having to resort to regex parsing.</p>
+<p>Here we user Llama 3.1 NIMs tool calling capability to split the initial query intp sub-queries</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">langchain_core.pydantic_v1</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span> <span class="nc">SubQuery</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a user question, break it down into distinct sub questions that \</span>
+<span class="sd">    you need to answer in order to answer the original question.&quot;&quot;&quot;</span>
+
+    <span class="n">questions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;The list of sub questions&quot;</span><span class="p">)</span>
+
+<span class="n">sub_question_generator</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">SubQuery</span><span class="p">)</span>
+<span class="n">sub_question_generator</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-5-create-a-simple-rag-chain-with-hybrid-retriever">
+<h4>Step-5: Create a simple RAG chain with hybrid retriever<a class="headerlink" href="#step-5-create-a-simple-rag-chain-with-hybrid-retriever" title="Permalink to this headline"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langchain</span> <span class="kn">import</span> <span class="n">hub</span>
+<span class="kn">from</span> <span class="nn">langchain_core.output_parsers</span> <span class="kn">import</span> <span class="n">StrOutputParser</span>
+
+<span class="c1"># Prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="s2">&quot;rlm/rag-prompt&quot;</span><span class="p">)</span>
+
+<span class="c1"># Post-processing</span>
+<span class="k">def</span> <span class="nf">format_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">)</span>
+
+<span class="c1"># Chain</span>
+<span class="n">rag_chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Run</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">hybrid_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+<span class="n">generation</span> <span class="o">=</span> <span class="n">rag_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">format_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">),</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">generation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-6-create-a-retrieval-grader-with-structured-generation">
+<h4>Step-6: Create a Retrieval grader with structured generation<a class="headerlink" href="#step-6-create-a-retrieval-grader-with-structured-generation" title="Permalink to this headline"></a></h4>
+<p>Checks if the retrieved passages/chunks are relevant to the question at hand.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Retrieval Grader</span>
+
+<span class="c1"># Data model</span>
+<span class="k">class</span> <span class="nc">GradeDocuments</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Binary score for relevance check on retrieved documents.&quot;&quot;&quot;</span>
+
+    <span class="n">binary_score</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Documents are relevant to the question, &#39;yes&#39; or &#39;no&#39;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># LLM with function call</span>
+
+<span class="n">retrieval_grader</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">GradeDocuments</span><span class="p">)</span>
+
+<span class="c1"># Prompt</span>
+<span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a grader assessing relevance of a retrieved document to a user question. </span><span class="se">\n</span><span class="s2"> </span>
+<span class="s2">    It does not need to be a stringent test. The goal is to filter out erroneous retrievals. </span><span class="se">\n</span>
+<span class="s2">    If the document contains keyword(s) or semantic meaning related to the user question, grade it as relevant. </span><span class="se">\n</span>
+<span class="s2">    Give a binary score &#39;yes&#39; or &#39;no&#39; score to indicate whether the document is relevant to the question.&quot;&quot;&quot;</span>
+
+<span class="n">grade_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span>
+    <span class="p">[</span>
+     
+        <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Retrieved document: </span><span class="se">\n\n</span><span class="s2"> </span><span class="si">{document}</span><span class="s2"> </span><span class="se">\n\n</span><span class="s2"> User question: </span><span class="si">{question}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">retrieval_grader</span> <span class="o">=</span> <span class="n">grade_prompt</span> <span class="o">|</span> <span class="n">retrieval_grader</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">hybrid_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+<span class="n">doc_txt</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">retrieval_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="n">doc_txt</span><span class="p">}))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-7-create-a-hallucination-checker-with-structured-generation">
+<h4>Step-7: Create a hallucination checker with structured generation<a class="headerlink" href="#step-7-create-a-hallucination-checker-with-structured-generation" title="Permalink to this headline"></a></h4>
+<p>Checks if the LLM generation from each chunk is relevant to the chunk.  Post-generation verification is necessary since the models are not explicitly trained to follow facts from passages.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Hallucination Grader</span>
+
+<span class="c1"># Data model</span>
+<span class="k">class</span> <span class="nc">GradeHallucinations</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Binary score for hallucination present in generation answer.&quot;&quot;&quot;</span>
+
+    <span class="n">binary_score</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Answer is grounded in the facts, &#39;yes&#39; or &#39;no&#39;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="n">hallucination_grader</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">GradeHallucinations</span><span class="p">)</span>
+
+<span class="c1"># Prompt</span>
+<span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a grader assessing whether an LLM generation is grounded in / supported by a set of retrieved facts. </span><span class="se">\n</span><span class="s2"> </span>
+<span class="s2">     Give a binary score &#39;yes&#39; or &#39;no&#39;. &#39;Yes&#39; means that the answer is grounded in / supported by the set of facts.&quot;&quot;&quot;</span>
+<span class="n">hallucination_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;Set of facts: </span><span class="se">\n\n</span><span class="s2"> </span><span class="si">{documents}</span><span class="s2"> </span><span class="se">\n\n</span><span class="s2"> LLM generation: </span><span class="si">{generation}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">hallucination_grader</span> <span class="o">=</span> <span class="n">hallucination_prompt</span> <span class="o">|</span> <span class="n">hallucination_grader</span>
+<span class="n">hallucination_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">format_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">),</span> <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-7-create-a-answer-grader-with-structured-generation">
+<h4>Step-7: Create a answer grader with structured generation<a class="headerlink" href="#step-7-create-a-answer-grader-with-structured-generation" title="Permalink to this headline"></a></h4>
+<p>Checks if the final answer resolves the supplied question</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Answer Grader</span>
+
+<span class="c1"># Data model</span>
+<span class="k">class</span> <span class="nc">GradeAnswer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Binary score to assess answer addresses question.&quot;&quot;&quot;</span>
+
+    <span class="n">binary_score</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Answer addresses the question, &#39;yes&#39; or &#39;no&#39;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="n">generation_grader</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">with_structured_output</span><span class="p">(</span><span class="n">GradeAnswer</span><span class="p">)</span>
+
+<span class="c1"># Prompt</span>
+<span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a grader assessing whether an answer addresses / resolves a question </span><span class="se">\n</span><span class="s2"> </span>
+<span class="s2">     Give a binary score &#39;yes&#39; or &#39;no&#39;. Yes&#39; means that the answer resolves the question.&quot;&quot;&quot;</span>
+<span class="n">answer_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;User question: </span><span class="se">\n\n</span><span class="s2"> </span><span class="si">{question}</span><span class="s2"> </span><span class="se">\n\n</span><span class="s2"> LLM generation: </span><span class="si">{generation}</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">answer_grader</span> <span class="o">=</span> <span class="n">answer_prompt</span> <span class="o">|</span> <span class="n">generation_grader</span>
+<span class="n">answer_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-8-question-rewriting">
+<h4>Step-8: Question rewriting<a class="headerlink" href="#step-8-question-rewriting" title="Permalink to this headline"></a></h4>
+<p>If none of retrieved documents are unrelated to the given question, then we ask the LLM to rewrite the question again for easier retrieval.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Question Re-writer</span>
+
+<span class="c1"># Prompt</span>
+<span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You a question re-writer that converts an input question to a better version that is optimized </span><span class="se">\n</span><span class="s2"> </span>
+<span class="s2">     for vectorstore retrieval. Look at the input and try to reason about the underlying semantic intent / meaning.&quot;&quot;&quot;</span>
+<span class="n">re_write_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;human&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Here is the initial question: </span><span class="se">\n\n</span><span class="s2"> </span><span class="si">{question}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> Formulate an improved question.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">question_rewriter</span> <span class="o">=</span> <span class="n">re_write_prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+<span class="n">question_rewriter</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-9-langgraph-setup">
+<h4>Step-9: Langgraph setup<a class="headerlink" href="#step-9-langgraph-setup" title="Permalink to this headline"></a></h4>
+<p>Capture the flow in as a graph. Define the graph state, which is a data structure that is shared among the nodes of the graph, each node modifies the graph state depending on its function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypedDict</span>
+
+
+<span class="k">class</span> <span class="nc">GraphState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the state of our graph.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        question: question</span>
+<span class="sd">        generation: LLM generation</span>
+<span class="sd">        documents: list of documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">question</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sub_questions</span><span class="p">:</span>  <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">generation</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-10-define-the-nodes-as-functions">
+<h4>Step-10: Define the nodes as functions<a class="headerlink" href="#step-10-define-the-nodes-as-functions" title="Permalink to this headline"></a></h4>
+<p>Using the langchain constructs we have defined above for query decompostion, grading, retrieval, hallucination checking etc, we can write functions that act as nodes for the multi-agent graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Nodes</span>
+
+<span class="k">def</span> <span class="nf">decompose</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve documents</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): New key added to state, documents, that contains retrieved documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---QUERY DECOMPOSITION ---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Reranking</span>
+    <span class="n">sub_queries</span> <span class="o">=</span> <span class="n">sub_question_generator</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;sub_questions&quot;</span><span class="p">:</span> <span class="n">sub_queries</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve documents</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): New key added to state, documents, that contains retrieved documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---RETRIEVE---&quot;</span><span class="p">)</span>
+    <span class="n">sub_questions</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;sub_questions&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Retrieval</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">question</span> <span class="ow">in</span> <span class="n">sub_questions</span><span class="p">:</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="n">hybrid_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+        <span class="n">documents</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">rerank</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve documents</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): New key added to state, documents, that contains retrieved documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---RERANK---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Reranking</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">reranker</span><span class="o">.</span><span class="n">compress_documents</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">question</span><span class="p">,</span> <span class="n">documents</span><span class="o">=</span><span class="n">documents</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate answer</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): New key added to state, generation, that contains LLM generation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---GENERATE---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="c1"># RAG generation</span>
+    <span class="n">generation</span> <span class="o">=</span> <span class="n">rag_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">grade_documents</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines whether the retrieved documents are relevant to the question.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): Updates documents key with only filtered relevant documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---CHECK DOCUMENT RELEVANCE TO QUESTION---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Score each doc</span>
+    <span class="n">filtered_docs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">retrieval_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">page_content</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">grade</span> <span class="o">=</span> <span class="n">score</span><span class="o">.</span><span class="n">binary_score</span>
+        <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---GRADE: DOCUMENT RELEVANT---&quot;</span><span class="p">)</span>
+            <span class="n">filtered_docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---GRADE: DOCUMENT NOT RELEVANT---&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">filtered_docs</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">transform_query</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform the query to produce a better question.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        state (dict): Updates question key with a re-phrased question</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---TRANSFORM QUERY---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Re-write question</span>
+    <span class="n">better_question</span> <span class="o">=</span> <span class="n">question_rewriter</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">better_question</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-11-define-graph-edges">
+<h4>Step-11: Define graph edges<a class="headerlink" href="#step-11-define-graph-edges" title="Permalink to this headline"></a></h4>
+<p>The nodes defined above are connected to each other through functional edges, defined programatically. Based on the graph state the edges might pass the state information to one of the multiple different nodes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Edges</span>
+
+
+<span class="k">def</span> <span class="nf">decide_to_generate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines whether to generate an answer, or re-generate a question.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Binary decision for next node to call</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---ASSESS GRADED DOCUMENTS---&quot;</span><span class="p">)</span>
+    <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">filtered_documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filtered_documents</span><span class="p">:</span>
+        <span class="c1"># All documents have been filtered check_relevance</span>
+        <span class="c1"># We will re-generate a new query</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;---DECISION: ALL DOCUMENTS ARE NOT RELEVANT TO QUESTION, TRANSFORM QUERY---&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;transform_query&quot;</span>
+    <span class="c1"># We have relevant documents, so generate answer</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---DECISION: GENERATE---&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;generate&quot;</span>
+    
+<span class="k">def</span> <span class="nf">grade_generation_v_documents_and_question</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines whether the generation is grounded in the document and answers question.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): The current graph state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Decision for next node to call</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---CHECK HALLUCINATIONS---&quot;</span><span class="p">)</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+    <span class="n">generation</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;generation&quot;</span><span class="p">]</span>
+
+    <span class="n">score</span> <span class="o">=</span> <span class="n">hallucination_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">grade</span> <span class="o">=</span> <span class="n">score</span><span class="o">.</span><span class="n">binary_score</span>
+
+    <span class="c1"># Check hallucination</span>
+    <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---&quot;</span><span class="p">)</span>
+        <span class="c1"># Check question-answering</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---GRADE GENERATION vs QUESTION---&quot;</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">answer_grader</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span><span class="p">})</span>
+        <span class="n">grade</span> <span class="o">=</span> <span class="n">score</span><span class="o">.</span><span class="n">binary_score</span>
+        <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---DECISION: GENERATION ADDRESSES QUESTION---&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;useful&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---DECISION: GENERATION DOES NOT ADDRESS QUESTION---&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;not useful&quot;</span>
+    <span class="n">pprint</span><span class="p">(</span><span class="s2">&quot;---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;not supported&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-12-build-the-graph">
+<h4>Step-12: Build the graph<a class="headerlink" href="#step-12-build-the-graph" title="Permalink to this headline"></a></h4>
+<p>We define the rules for how the nodes are connected to each other, we also use conditional edges, which can connect to different nodes based on the output of the functional edge</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langgraph.graph</span> <span class="kn">import</span> <span class="n">END</span><span class="p">,</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">START</span>
+
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">GraphState</span><span class="p">)</span>
+
+<span class="c1"># Define the nodes</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;decompose&quot;</span><span class="p">,</span> <span class="n">decompose</span><span class="p">)</span> <span class="c1">#query decompostion</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;retrieve&quot;</span><span class="p">,</span> <span class="n">retrieve</span><span class="p">)</span>  <span class="c1"># retrieve</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;rerank&quot;</span><span class="p">,</span> <span class="n">rerank</span><span class="p">)</span>  <span class="c1"># rerank</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;grade_documents&quot;</span><span class="p">,</span> <span class="n">grade_documents</span><span class="p">)</span>  <span class="c1"># grade documents</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;generate&quot;</span><span class="p">,</span> <span class="n">generate</span><span class="p">)</span>  <span class="c1"># generatae</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;transform_query&quot;</span><span class="p">,</span> <span class="n">transform_query</span><span class="p">)</span>  <span class="c1"># transform_query</span>
+
+<span class="c1"># Build graph</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">START</span><span class="p">,</span> <span class="s2">&quot;decompose&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;decompose&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;retrieve&quot;</span><span class="p">,</span> <span class="s2">&quot;rerank&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;rerank&quot;</span><span class="p">,</span> <span class="s2">&quot;grade_documents&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span>
+    <span class="s2">&quot;grade_documents&quot;</span><span class="p">,</span>
+    <span class="n">decide_to_generate</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;transform_query&quot;</span><span class="p">:</span> <span class="s2">&quot;transform_query&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="s2">&quot;generate&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;transform_query&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span>
+    <span class="s2">&quot;generate&quot;</span><span class="p">,</span>
+    <span class="n">grade_generation_v_documents_and_question</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;not supported&quot;</span><span class="p">:</span> <span class="s2">&quot;generate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;useful&quot;</span><span class="p">:</span> <span class="n">END</span><span class="p">,</span>
+        <span class="s2">&quot;not useful&quot;</span><span class="p">:</span> <span class="s2">&quot;transform_query&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Compile</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-13-run-the-multi-agent-rag-workflow">
+<h4>Step-13: Run the multi-agent RAG workflow<a class="headerlink" href="#step-13-run-the-multi-agent-rag-workflow" title="Permalink to this headline"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="c1"># Run</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Node</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+        <span class="c1"># Optional: print full state at each node</span>
+        <span class="c1"># pprint.pprint(value[&quot;keys&quot;], indent=2, width=80, depth=None)</span>
+    <span class="n">pprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">---</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Final generation</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;generation&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="08_RAG_Langchain_with_Local_NIM.html" class="btn btn-neutral float-left" title="Build a RAG using a locally hosted NIM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, NVIDIA Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+
+
+
+</body>
+</html>
