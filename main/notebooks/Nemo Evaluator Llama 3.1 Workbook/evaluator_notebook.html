@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to Evaluation with Nemo Evaluator &mdash; NVIDIA Generative AI Examples 24.6.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/omni-style.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/version.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+ 
+
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+<a href="../../index.html">
+  <img src="../../_static/nvidia-logo-white.png" class="logo" alt="Logo"/>
+</a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">RAG Pipelines for Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">About the RAG Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support-matrix.html">Support Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-catalog.html">API Catalog Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../query-decomposition.html">Query Decomposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structured-data.html">Structured Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multimodal-data.html">Multimodal Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multi-turn.html">Multi-turn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../using-sample-web-application.html">Sample Chat Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vector-database.html">Alternative Vector Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nim-llms.html">NIM for LLMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simple-examples.html">Developing Simple Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/evaluation/index.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../observability.html">Observability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_dataloader.html">Press Release Chat Bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_Option%281%29_NVIDIA_AI_endpoint_simple.html">NVIDIA API Catalog with LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_Option%282%29_minimalistic_RAG_with_langchain_local_HF_LLM.html">LangChain with Local Llama 2 Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_Option%281%29_llama_index_with_NVIDIA_AI_endpoint.html">NVIDIA API Catalog, LlamaIndex, and LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_Option%282%29_llama_index_with_HF_local_LLM.html">HF Checkpoints with LlamaIndex and LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_Agent_use_tools_leveraging_NVIDIA_AI_endpoints.html">Multimodal Models from NVIDIA AI Catelog and AI Catalog with LangChain Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_RAG_for_HTML_docs_with_Langchain_NVIDIA_AI_Endpoints.html">Build a RAG chain by generating embeddings for NVIDIA Triton documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_LangGraph_HandlingAgent_IntermediateSteps.html">LangGraph Handling LangChain Agent Intermediate_Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_Chat_with_nvidia_financial_reports.html">Notebook: Chatting with NVIDIA Financial Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08_RAG_Langchain_with_Local_NIM.html">Build a RAG using a locally hosted NIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../agentic_rag_with_nemo_retriever_nims.html">Agentic RAG pipeline with Nemo Retriever and LLM NIMs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../frontend.html">RAG Playground Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupyter-server.html">Jupyter Notebook Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../chain-server.html">Chain Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Software Component Configuration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NVIDIA Generative AI Examples</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction to Evaluation with Nemo Evaluator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-evaluation-with-nemo-evaluator">
+<h1>Introduction to Evaluation with Nemo Evaluator<a class="headerlink" href="#introduction-to-evaluation-with-nemo-evaluator" title="Permalink to this headline"></a></h1>
+<p>In the following notebook we will examine a routine experimentation flow where we first select a baseline model and evaluate it on our task, then we customize our model using a dataset created with Synthetic Data generation and evaluate it.</p>
+<p>We will be working with Llama 3.1 8B Instruct as our baseline model, and customizing it for a title-generation (summarization) task by using the Low-Rank Adaptation (LoRA) Parameter Efficient Fine-tuning (PEFT) method on a document-title pair dataset that was created using Synthetic Data Generation.</p>
+<p>This notebook will follow from <a class="reference external" href="https://github.com/NVIDIA/NeMo/tree/main/tutorials/llm/llama-3/sdg-law-title-generation">this</a> customizer tutorial.</p>
+<p>We will explore how to leverage Nemo Evaluator for the following tasks:</p>
+<ol class="arabic simple">
+<li><p>Baseline Evaluation of Llama 3.1 8B Instruct using BigBench (Intent Recognition)</p></li>
+<li><p>Custom Dataset Evaluation of a Customized Model Using ROUGE</p></li>
+<li><p>Custom Dataset Evaluation of a Customized Model using LLM-As-A-Judge</p></li>
+</ol>
+<p>Before you begin, you will need to make sure you’re in an environment where you have API access to Nemo Evaluator API, baseline model NIM, the customized model NIM, and a judge LLM NIM.</p>
+<p>For instructions on the above, please check out the detailed <a class="reference external" href="https://developer.nvidia.com/docs/nemo-microservices/evaluation/source/deploy-helm.html">Nemo Evaluator deployment guide</a>, and the <a class="reference external" href="https://developer.nvidia.com/docs/nemo-microservices/inference/getting_started/deploy-helm.html">NIM deployment guide</a>.</p>
+<section id="verify-nemo-evaluator-is-healthy">
+<h2>Verify Nemo Evaluator is Healthy<a class="headerlink" href="#verify-nemo-evaluator-is-healthy" title="Permalink to this headline"></a></h2>
+<p>Before digging into the Evaluator Service, we will first need to verify that the service is active and running. The can be achieved through the health endpoint.</p>
+<p>The first step in this process will be to provide the Nemo Evaluator endpoint URL. Assuming you’ve followed the deployment guide, you will use the same URL used during the <a class="reference external" href="https://developer.nvidia.com/docs/nemo-microservices/evaluation/source/deploy-helm.html#verify-installation">Verify Installation</a> step</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">EVAL_URL</span> <span class="o">=</span> <span class="s2">&quot;MY_EVALUATOR_URL&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we can send a request to the <code class="docutils literal notranslate"><span class="pre">/health</span></code> endpoint to verify that the endpoint is active and healthy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">endpoint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">EVAL_URL</span><span class="si">}</span><span class="s2">/health&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="baseline-evaluation-of-llama-3-1-8b-instruct-with-bigbench">
+<h2>Baseline Evaluation of Llama 3.1 8B Instruct with BigBench<a class="headerlink" href="#baseline-evaluation-of-llama-3-1-8b-instruct-with-bigbench" title="Permalink to this headline"></a></h2>
+<p>The Nemo Evaluator microservice allows users to run a number of academic benchmarks, all of which are accessible through the Nemo Evaluator API.</p>
+<blockquote>
+<div><p>NOTE: For more details on what evaluations are available, please head to the <a class="reference external" href="https://developer.nvidia.com/docs/nemo-microservices/evaluation/source/evaluations.html">Evaluation documentation</a></p>
+</div></blockquote>
+<p>For this notebook, we will be running the BigBench evaluation (details available <a class="reference external" href="https://developer.nvidia.com/docs/nemo-microservices/evaluation/source/evaluations.html#bigbench">here</a>)! This benchmark consists of 200+ tasks for evaluating LLMs.</p>
+<p>First, we’ll point to our NIM baseline model for our “model” in our Evaluation payload.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;llm_type&quot;</span><span class="p">:</span> <span class="s2">&quot;nvidia-nemo-nim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-customized-model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inference_url&quot;</span><span class="p">:</span> <span class="s2">&quot;MY_NIM_URL/v1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;use_chat_endpoint&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can initialize our evaluation config, which is how we communicate which benchmark tasks, subtasks, etc. to use during evaluation.</p>
+<p>For this evaluation, we’ll focus on a small subset of BigBench by choosing the <code class="docutils literal notranslate"><span class="pre">intent_recognition</span></code> task.</p>
+<p><code class="docutils literal notranslate"><span class="pre">intent_recognition</span></code> is a task specifically tailored to determine if the model is good at recognizing a given utterance’s intent. More details available <a class="reference external" href="https://github.com/google/BIG-bench/tree/main/bigbench/benchmark_tasks/intent_recognition">here</a>.</p>
+<p>We’ll also select the <code class="docutils literal notranslate"><span class="pre">tydiqa_goldp.en</span></code> task to see how Llama 3 8B Instruct stacks up on the English subset of the <code class="docutils literal notranslate"><span class="pre">TyDi</span> <span class="pre">QA</span></code> benchmark. More details available <a class="reference external" href="https://github.com/google-research-datasets/tydiqa">here</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;eval_type&quot;</span><span class="p">:</span> <span class="s2">&quot;automatic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_subtype&quot;</span><span class="p">:</span> <span class="s2">&quot;bigbench&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;standard_tasks&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;intent_recognition&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;tydiqa_tasks&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;tydiqa_goldp.en&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;standard_tasks_args&quot;</span><span class="p">:</span> <span class="s2">&quot;--max_length=64 --json_shots=&#39;0,2&#39;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tydiqa_tasks_args&quot;</span><span class="p">:</span> <span class="s2">&quot;--max_length=16 --json_shots=&#39;1,8&#39;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;few_shot_example_separator_override&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;standard_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;tydiqa_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;example_input_prefix_override&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;standard_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;tydiqa_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;example_output_prefix_override&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;standard_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;abstract_narrative_understanding&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;tydiqa_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;stop_string_override&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;standard_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;abstract_narrative_understanding&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;tydiqa_tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can load our config and send the request to the Evaluator API!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluator_payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span> <span class="p">:</span> <span class="n">model_config</span><span class="p">,</span>
+    <span class="s2">&quot;evaluations&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="n">evaluation_config</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have our payload - we can send it to our Nemo Evaluator endpoint.</p>
+<p>We’ll set up our Evaluator endpoint URL…</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluator_endpoint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">EVAL_URL</span><span class="si">}</span><span class="s2">/v1/evaluations&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And fire off the request!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">evaluator_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">evaluator_payload</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">evaluation_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;evaluation_id&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluation ID: </span><span class="si">{</span><span class="n">evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each Nemo Evaluator job will give us an Evaluation ID which we can use to track, and then collect our Evaluation results.</p>
+<p>Let’s see how our job is doing - and check the results!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_id_endpoint</span> <span class="o">=</span> <span class="n">evaluator_endpoint</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">evaluation_id_endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">response</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="upload-a-custom-dataset-for-evaluation">
+<h2>Upload a Custom Dataset for Evaluation<a class="headerlink" href="#upload-a-custom-dataset-for-evaluation" title="Permalink to this headline"></a></h2>
+<p>The first thing we will need to do is to upload our custom dataset to the Data Store. The dataset is provided in the <code class="docutils literal notranslate"><span class="pre">custom_dataset</span></code> directory.</p>
+<p>First, we will examine the structure of the dataset:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">question.jsonl</span></code> contains our initial documents that we want to create titles for.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reference_answer/references.jsonl</span></code> contains the reference titles generated during our Synthetic Data Generation (SDG) data curation step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs.jsonl</span></code> is a collection of the raw question prompts that can be useful for custom evaluation.</p></li>
+<li><p>It has a <code class="docutils literal notranslate"><span class="pre">judge_prompts.jsonl</span></code>, this will be useful when the dataset is used with our LLM-As-A-Judge approach, as it contains the required prompt in the expected format for the judge model.</p></li>
+</ul>
+<section id="preparing-to-upload-to-data-store">
+<h3>Preparing to Upload to Data Store<a class="headerlink" href="#preparing-to-upload-to-data-store" title="Permalink to this headline"></a></h3>
+<p>In order to upload this custom dataset, we’ll take advantage of the Hugging Face Hub library from Hugging Face to interact with our Data Store.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-qU<span class="w"> </span>huggingface_hub
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we’ll point to our Data Store API and use the provided <code class="docutils literal notranslate"><span class="pre">mock</span></code> token to gain access to the Data Store.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datastore_url</span> <span class="o">=</span> <span class="s2">&quot;YOUR_DATASTORE_URL&quot;</span>
+<span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;mock&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll also name our Data Store repository with something descriptive so we can reference it later.</p>
+<p>We will also provide the path to our local data that needs to be added to our Data Store.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">repository_name</span> <span class="o">=</span> <span class="s2">&quot;legal-title-dataset&quot;</span>
+<span class="n">local_data_path</span> <span class="o">=</span> <span class="s2">&quot;./custom_dataset&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can create an empty dataset repository in our Data Store.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datasets_endpoint</span> <span class="o">=</span> <span class="n">datastore_url</span> <span class="o">+</span> <span class="s2">&quot;/v1/datasets&quot;</span>
+
+<span class="n">post_body</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="n">repository_name</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;Legal Title Dataset - 128&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">repo_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">datasets_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">post_body</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have a repository available on our Data Store - we can upload our dataset!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">huggingface_hub</span> <span class="k">as</span> <span class="nn">hh</span>
+
+<span class="n">repo_full_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nvidia/</span><span class="si">{</span><span class="n">repository_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">path_in_repo</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+<span class="n">repo_type</span> <span class="o">=</span> <span class="s2">&quot;dataset&quot;</span>
+<span class="n">hf_api</span> <span class="o">=</span> <span class="n">hh</span><span class="o">.</span><span class="n">HfApi</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">datastore_url</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">hf_api</span><span class="o">.</span><span class="n">upload_folder</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="n">repo_full_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="o">=</span><span class="n">local_data_path</span><span class="p">,</span> <span class="n">path_in_repo</span><span class="o">=</span><span class="n">path_in_repo</span><span class="p">,</span> <span class="n">repo_type</span><span class="o">=</span><span class="n">repo_type</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset Folder Uploaded To: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluating-the-customized-model-on-rouge">
+<h2>Evaluating the Customized Model on ROUGE<a class="headerlink" href="#evaluating-the-customized-model-on-rouge" title="Permalink to this headline"></a></h2>
+<p>Now that we’ve seen how our baseline performs on our task - we can evaluate our customized model on the same metric to see how it performs.</p>
+<blockquote>
+<div><p>NOTE: As a reminder, we used PEFT LoRA to customize our model on synthetically created document-title data.</p>
+</div></blockquote>
+<p>We can reuse the model config above with minor modifications - which need to reference the customized model’s NIM!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;llm_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;nvidia-nemo-nim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;container&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-container&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inference_url&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-inference-url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;use_chat_endpoint&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will also need to modify our evaluation configs to reference the new model’s NIM.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;eval_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;automatic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_subtype&quot;</span> <span class="p">:</span> <span class="s2">&quot;custom_eval&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;input_file&quot;</span> <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;nds:</span><span class="si">{</span><span class="n">repository_name</span><span class="si">}</span><span class="s2">/inputs.jsonl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inference_configs&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;model&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;llm_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-model&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;run_inference&quot;</span> <span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;inference_params&quot;</span> <span class="p">:</span>  <span class="p">{</span>
+                <span class="s2">&quot;tokens_to_generate&quot;</span> <span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                <span class="s2">&quot;temperature&quot;</span> <span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                <span class="s2">&quot;top_k&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;num_of_samples&quot;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;scorers&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rouge&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can send the evaluation job off to the Evaluator API endpoint.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">customized_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">evaluator_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">evaluator_payload</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">customized_evaluation_id</span> <span class="o">=</span> <span class="n">customized_response</span><span class="p">[</span><span class="s2">&quot;evaluation_id&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluation ID: </span><span class="si">{</span><span class="n">customized_evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we can check on how the evaluation went by accessing our Evaluation ID endpoint!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">customized_evaluation_id_endpoint</span> <span class="o">=</span> <span class="n">evaluator_endpoint</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">customized_evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">customized_evaluation_id_endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">response</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluating-the-customized-model-with-llm-as-a-judge">
+<h2>Evaluating the Customized Model with LLM-As-A-Judge<a class="headerlink" href="#evaluating-the-customized-model-with-llm-as-a-judge" title="Permalink to this headline"></a></h2>
+<p>Finally, we can evaluate our customized model by leveraging Nemo Evaluators easily implemented LLM-As-A-Judge API!</p>
+<p>First, let’s check out the custom prompt we’re going to send to our judge LLM that we’ve included in our Data Store.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># open &quot;custom_dataset/judge_prompts.jsonl&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;custom_dataset/judge_prompts.jsonl&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">judge_prompts</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+<span class="n">full_prompt_object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">judge_prompts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="n">full_prompt_object</span><span class="p">[</span><span class="s2">&quot;system_prompt&quot;</span><span class="p">]</span>
+<span class="n">judge_prompt_template</span> <span class="o">=</span> <span class="n">full_prompt_object</span><span class="p">[</span><span class="s2">&quot;prompt_template&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;System Prompt: </span><span class="si">{</span><span class="n">system_prompt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prompt Template: </span><span class="si">{</span><span class="n">judge_prompt_template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice how we have the following formattable attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{question}</span></code> - this is our source document that we wish to generate a title for</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{ref_answer_1}</span></code> - this is the reference title provided from our test set</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{answer}</span></code> - this is the output that is generated by the LLM we’re evaluating</p></li>
+</ul>
+<p>So, for every instance in our test data - we’ll prompt the Judge LLM to judge our customized model’s response against the ground truth and provide ratings.</p>
+<p>We’ll need to create an evaluation payload again - let’s start with our model config.</p>
+<blockquote>
+<div><p>NOTE: This model config will refer to our customized model - as it is the model that is <em>being</em> judged. We can re-use the config we used before.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;llm_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;nvidia-nemo-nim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;container&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-container&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inference_url&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-customized-inference-url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;use_chat_endpoint&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can set-up our evaluation config.</p>
+<p>Notice that we’re now providing a <code class="docutils literal notranslate"><span class="pre">judge_model</span></code>, and <code class="docutils literal notranslate"><span class="pre">judge_inference_params</span></code> field. This will reference the model that will act as our LLM-As-A-Judge.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;eval_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;llm_as_a_judge&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_subtype&quot;</span> <span class="p">:</span> <span class="s2">&quot;mtbench&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bench_name&quot;</span> <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">repository_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;single&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;input_dir&quot;</span> <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;nds:</span><span class="si">{</span><span class="n">repository_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inference_params&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;top_p&quot;</span> <span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="s2">&quot;top_k&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;temperature&quot;</span> <span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+        <span class="s2">&quot;stop&quot;</span> <span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;tokens_to_generate&quot;</span> <span class="p">:</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;judge_model&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;llm_type&quot;</span> <span class="p">:</span> <span class="s2">&quot;nvidia-nemo-nim&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-judge-llm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inference_url&quot;</span> <span class="p">:</span> <span class="s2">&quot;my-judge-llm-url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;use_chat_endpoint&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;judge_inference_params&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;top_p&quot;</span> <span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span> 
+        <span class="s2">&quot;top_k&quot;</span> <span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+        <span class="s2">&quot;temperature&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="s2">&quot;stop&quot;</span> <span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;tokens_to_generate&quot;</span> <span class="p">:</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s wrap this in our payload - and add a useful tag for tracking our Evaluation job!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluator_payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span> <span class="p">:</span> <span class="n">model_config</span><span class="p">,</span>
+    <span class="s2">&quot;evaluations&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="n">evaluation_config</span><span class="p">],</span>
+    <span class="s2">&quot;tag&quot;</span> <span class="p">:</span> <span class="s2">&quot;title-generation-llm-as-a-judge&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once again, we’ll fire this off to the evaluator endpoint.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_as_judge_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">evaluator_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">evaluator_payload</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">llm_as_judge_evaluation_id</span> <span class="o">=</span> <span class="n">llm_as_judge_response</span><span class="p">[</span><span class="s2">&quot;evaluation_id&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluation ID: </span><span class="si">{</span><span class="n">llm_as_judge_evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_as_a_judge_evaluation_id_endpoint</span> <span class="o">=</span> <span class="n">evaluator_endpoint</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">llm_as_judge_evaluation_id</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">llm_as_a_judge_evaluation_id_endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">response</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can download our results as a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> to see how our customized model did!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_repository_path</span> <span class="o">=</span> <span class="n">llm_as_judge_evaluation_id</span>
+<span class="n">download_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;./llm_as_a_judge_results/&quot;</span>
+
+<span class="n">repo_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nvidia/</span><span class="si">{</span><span class="n">result_repository_path</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">hh</span><span class="o">.</span><span class="n">HfApi</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">datastore_url</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<span class="n">repo_type</span> <span class="o">=</span> <span class="s2">&quot;dataset&quot;</span>
+<span class="n">api</span><span class="o">.</span><span class="n">snapshot_download</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="n">repo_name</span><span class="p">,</span> <span class="n">repo_type</span><span class="o">=</span><span class="n">repo_type</span><span class="p">,</span> <span class="n">local_dir</span><span class="o">=</span><span class="n">download_path</span><span class="p">,</span> <span class="n">local_dir_use_symlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s look at the results!</p>
+<p>Remember from our LLM-As-A-Judge prompt:</p>
+<blockquote>
+<div><p>You will evaluate the quality of Summary 2 on a scale of 1-7</p>
+</div></blockquote>
+<p>This means our total score will be out of 7!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./llm_as_a_judge_results/llm_as_a_judge/mtbench/results/my-customized-model.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">table</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Additionally, we can inspect the response directly to see how the Judge LLM arrived at the scores.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">llm_judge_responses</span> <span class="o">=</span> <span class="s2">&quot;./llm_as_a_judge_results/llm_as_a_judge/mtbench/legal-title-dataset/model_judgement/my-judge-llm_single_for_my-customized-model.jsonl&quot;</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">llm_judge_responses</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;question_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> - Score: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">Explanation:</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;judgment&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, NVIDIA Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+
+
+
+</body>
+</html>
